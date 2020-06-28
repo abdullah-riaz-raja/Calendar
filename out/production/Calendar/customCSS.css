@@ -1,0 +1,21 @@
+.root {
+    -fx-background-color: #2B2D2F;
+}
+
+.label {
+    -fx-text-fill: #C2C5CC;
+}
+
+.button {
+    -fx-background-color: #40444b;
+    -fx-background-radius: 40;
+    -fx-padding: 10;
+    -fx-text-fill: #C2C5CC;
+}
+
+.text-input {
+    -fx-text-fill: #C2C5CC;
+    -fx-background-color: #262626;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}
