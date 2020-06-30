@@ -10,7 +10,10 @@ import javafx.stage.Stage;
 
 public class Events {
 
-    public static void display() {
+    public static void display(String[] date) {
+
+        System.out.println(date[0] + " " + date[1] + " "
+                + date[2] + " has been pressed.");
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));

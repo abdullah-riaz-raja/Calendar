@@ -5,13 +5,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -32,7 +30,7 @@ public class Main extends Application {
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
@@ -50,9 +48,9 @@ public class Main extends Application {
         dateEntry.add(yearField, 1, 1);
 
         Button enter = new Button("Enter");
-        enter.setOnAction(e -> {
-            display(primaryStage,monthField.getText(), Integer.parseInt(yearField.getText()));
-        });
+        enter.setOnAction(e ->
+                display(primaryStage,monthField.getText(), Integer.parseInt(yearField.getText()))
+        );
         dateEntry.add(enter, 1, 2);
 
         primaryStage.setTitle("Enter Month and Year");
@@ -90,7 +88,7 @@ public class Main extends Application {
                     match = true;
                 }
             }
-            if (match == false) {
+            if (!match) {
                 display(stage, months.get(0), year + 1);
             }
         });
@@ -104,7 +102,7 @@ public class Main extends Application {
                     match = true;
                 }
             }
-            if (match == false) {
+            if (!match) {
                 display(stage, months.get(11), year - 1);
             }
         });
@@ -170,9 +168,6 @@ public class Main extends Application {
         gcDayView.setFill(Color.WHITE);
         gcDayView.setLineWidth(1.2);
 
-        double w = 150;
-        double height = 90;
-
         gcDayView.setFont(new Font("Arial", 20));
         for (int i = 0; i < 7; i++) {
             gcDayView.fillText(days.get(i), i*150+20+30, 20+10);
@@ -190,14 +185,13 @@ public class Main extends Application {
         int yearCalc = (int) values[1];
         int fday = (int) values[2];                         //first day
 
-        double w = 150;
-        double height = 90;
-
         int daysCounter = 1;
 
         int newFday = fdayConv(fday);
 
         //NEW ARTIFACTS
+
+        String[] date = {"", month, Integer.toString(year)}; //dd/month//year format
 
         GridPane monthView = new GridPane();
         monthView.setAlignment(Pos.CENTER);
@@ -212,9 +206,8 @@ public class Main extends Application {
 
             int finalI = i;
             buttons.get(i).setOnAction(e -> {
-                System.out.println(buttons.get(finalI).getText() + " " + month + " "
-                                    + year + " has been pressed.");
-                Events.display();
+                date[0] = buttons.get(finalI).getText();
+                Events.display(date);
             });
         }
 
@@ -261,13 +254,13 @@ public class Main extends Application {
         int newFday = 0;
 
         switch (fday) {
-            case 0:    newFday = 5;  break;
-            case 1:    newFday = 6;  break;
-            case 2:    newFday = 0;  break;
-            case 3:    newFday = 1;  break;
-            case 4:    newFday = 2;  break;
-            case 5:    newFday = 3;  break;
-            case 6:    newFday = 4;  break;
+            case 0:  newFday = 5;  break;
+            case 1:  newFday = 6;  break;
+            case 2:  newFday = 0;  break;
+            case 3:  newFday = 1;  break;
+            case 4:  newFday = 2;  break;
+            case 5:  newFday = 3;  break;
+            case 6:  newFday = 4;  break;
             default: System.out.println("Incorrect input.");
         }
 
