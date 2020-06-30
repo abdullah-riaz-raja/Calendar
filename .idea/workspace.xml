@@ -87,10 +87,10 @@
     <property name="OverrideImplement.combined" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PATH_TO_FX$" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/mysql-connector-java-8.0.20.jar!/" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
@@ -196,30 +196,34 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="483" y="238" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1593558872182">
+      <screen x="0" y="0" width="1504" height="963" />
+    </state>
+    <state x="483" y="238" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1504.963@0.0.1504.963" timestamp="1593558872182" />
     <state x="208" y="138" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587879421056">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
     <state x="208" y="138" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1504.963@0.0.1504.963" timestamp="1587879421056" />
-    <state x="460" y="224" key="FileChooserDialogImpl" timestamp="1593207120375">
+    <state x="460" y="224" key="FileChooserDialogImpl" timestamp="1593559124536">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state x="460" y="224" key="FileChooserDialogImpl/0.0.1504.963@0.0.1504.963" timestamp="1593207120375" />
-    <state width="1461" height="106" key="GridCell.Tab.0.bottom" timestamp="1593556747202">
+    <state x="460" y="224" key="FileChooserDialogImpl/0.0.1504.963@0.0.1504.963" timestamp="1593559124536" />
+    <state width="1461" height="202" key="GridCell.Tab.0.bottom" timestamp="1593560199845">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state width="1461" height="106" key="GridCell.Tab.0.bottom/0.0.1504.963@0.0.1504.963" timestamp="1593556747202" />
-    <state width="1461" height="106" key="GridCell.Tab.0.center" timestamp="1593556747202">
+    <state width="1461" height="202" key="GridCell.Tab.0.bottom/0.0.1504.963@0.0.1504.963" timestamp="1593560199845" />
+    <state width="1461" height="202" key="GridCell.Tab.0.center" timestamp="1593560199845">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state width="1461" height="106" key="GridCell.Tab.0.center/0.0.1504.963@0.0.1504.963" timestamp="1593556747202" />
-    <state width="1461" height="106" key="GridCell.Tab.0.left" timestamp="1593556747202">
+    <state width="1461" height="202" key="GridCell.Tab.0.center/0.0.1504.963@0.0.1504.963" timestamp="1593560199845" />
+    <state width="1461" height="202" key="GridCell.Tab.0.left" timestamp="1593560199844">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state width="1461" height="106" key="GridCell.Tab.0.left/0.0.1504.963@0.0.1504.963" timestamp="1593556747202" />
-    <state width="1461" height="106" key="GridCell.Tab.0.right" timestamp="1593556747202">
+    <state width="1461" height="202" key="GridCell.Tab.0.left/0.0.1504.963@0.0.1504.963" timestamp="1593560199844" />
+    <state width="1461" height="202" key="GridCell.Tab.0.right" timestamp="1593560199845">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state width="1461" height="106" key="GridCell.Tab.0.right/0.0.1504.963@0.0.1504.963" timestamp="1593556747202" />
+    <state width="1461" height="202" key="GridCell.Tab.0.right/0.0.1504.963@0.0.1504.963" timestamp="1593560199845" />
     <state width="1461" height="317" key="GridCell.Tab.1.bottom" timestamp="1589871930885">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
@@ -236,10 +240,10 @@
       <screen x="0" y="0" width="1504" height="963" />
     </state>
     <state width="1461" height="317" key="GridCell.Tab.1.right/0.0.1504.963@0.0.1504.963" timestamp="1589871930885" />
-    <state x="233" y="57" key="SettingsEditor" timestamp="1593500955040">
+    <state x="233" y="57" key="SettingsEditor" timestamp="1593559125840">
       <screen x="0" y="0" width="1504" height="963" />
     </state>
-    <state x="233" y="57" key="SettingsEditor/0.0.1504.963@0.0.1504.963" timestamp="1593500955040" />
+    <state x="233" y="57" key="SettingsEditor/0.0.1504.963@0.0.1504.963" timestamp="1593559125840" />
     <state x="203" y="185" key="new project wizard" timestamp="1593207191533">
       <screen x="0" y="0" width="1504" height="963" />
     </state>

@@ -17,6 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,7 +34,13 @@ public class Main extends Application {
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws SQLException {
+
+        String query = "Select * from Events";
+
+        Connection con = DBConnection.startConnection();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(query);
 
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
@@ -57,6 +67,9 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(dateEntry, 300, 150));
         primaryStage.getScene().getStylesheets().add("customCSS.css");
         primaryStage.show();
+
+        st.close();
+        con.close();
     }
 
     public void display(Stage stage, String month, int year) {
@@ -75,9 +88,7 @@ public class Main extends Application {
         settings.setAlignment(Pos.CENTER_LEFT);
 
         Button goTo = new Button("Go To");
-        goTo.setOnAction(e -> {
-            display(stage, currentMonth.getText(), Integer.parseInt(currentYear.getText()));
-        });
+        goTo.setOnAction(e -> display(stage, currentMonth.getText(), Integer.parseInt(currentYear.getText())));
 
         Button next = new Button("Next");
         next.setOnAction(e -> {

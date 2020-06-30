@@ -8,6 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Events {
 
     public static void display(String[] date) {
@@ -42,6 +45,5 @@ public class Events {
         window.showAndWait();
 
     }
-
 
 }
