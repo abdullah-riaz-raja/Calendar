@@ -13,9 +13,20 @@
     -fx-text-fill: #C2C5CC;
 }
 
+.days-button {
+    -fx-background-color: #40444b;
+    -fx-text-fill: #C2C5CC;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    //-fx-border-style: solid solid solid solid; //doesnt work ugh
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
 .text-input {
     -fx-text-fill: #C2C5CC;
     -fx-background-color: #262626;
     -fx-font-weight: bold;
     -fx-background-radius: 8;
+    //-fx-alignment: top-left; //add this to a custom css class and apply it to event box
 }

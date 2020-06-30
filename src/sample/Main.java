@@ -5,13 +5,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -32,7 +30,7 @@ public class Main extends Application {
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
@@ -50,9 +48,9 @@ public class Main extends Application {
         dateEntry.add(yearField, 1, 1);
 
         Button enter = new Button("Enter");
-        enter.setOnAction(e -> {
-            display(primaryStage,monthField.getText(), Integer.parseInt(yearField.getText()));
-        });
+        enter.setOnAction(e ->
+                display(primaryStage,monthField.getText(), Integer.parseInt(yearField.getText()))
+        );
         dateEntry.add(enter, 1, 2);
 
         primaryStage.setTitle("Enter Month and Year");
@@ -90,7 +88,7 @@ public class Main extends Application {
                     match = true;
                 }
             }
-            if (match == false) {
+            if (!match) {
                 display(stage, months.get(0), year + 1);
             }
         });
@@ -104,20 +102,19 @@ public class Main extends Application {
                     match = true;
                 }
             }
-            if (match == false) {
+            if (!match) {
                 display(stage, months.get(11), year - 1);
             }
         });
 
         settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next);
 
-        //Displaying Days
-        HBox daysHeader = new HBox();
+        Node daysHeader = drawDays(month, year);
 
-        Node dayView = drawDays(month, year);
+        Node monthView = drawMonth(month, year);
 
         stage.setTitle("Calendar");
-        base.getChildren().addAll(settings, dayView);
+        base.getChildren().addAll(settings, daysHeader, monthView);
         stage.setScene(new Scene(base, 1100, 750));
         stage.getScene().getStylesheets().add("customCSS.css");
         stage.show();
@@ -165,14 +162,11 @@ public class Main extends Application {
         int yearCalc = (int) values[1];
         int fday = (int) values[2];                         //first day
 
-        Canvas dayView = new Canvas(1100, 800);
+        Canvas dayView = new Canvas(1100, 80);
         GraphicsContext gcDayView = dayView.getGraphicsContext2D();
         gcDayView.setStroke(Color.BLACK);
         gcDayView.setFill(Color.WHITE);
         gcDayView.setLineWidth(1.2);
-
-        double w = 150;
-        double height = 90;
 
         gcDayView.setFont(new Font("Arial", 20));
         for (int i = 0; i < 7; i++) {
@@ -180,37 +174,79 @@ public class Main extends Application {
         }
         gcDayView.strokeLine(0, 30+20, 1100, 30+20);
 
+        return dayView;
+    }
+
+    public Node drawMonth(String month, int year) {
+
+        double[] values = initializeMonth(month, year);     //contains monthNum, yearCalc and fday
+
+        double monthNum = values[0];                        //month Number according to Zeller's formula
+        int yearCalc = (int) values[1];
+        int fday = (int) values[2];                         //first day
+
         int daysCounter = 1;
 
         int newFday = fdayConv(fday);
 
-        Color date = Color.BLACK;
-        Color fill = Color.GRAY;
+        //NEW ARTIFACTS
 
-        for (int i = 0; i < 7 - newFday; i++) {
-            gcDayView.setFill(fill);
-            gcDayView.fillRect((newFday + i)*w + 30, height - 10, w, height);
-            gcDayView.setFill(date);
-            gcDayView.fillText(Integer.toString(daysCounter), (newFday +  i)*w + 10 + 30, height + 15);
-            gcDayView.strokeRect((newFday + i)*w + 30, height - 10, w, height);
-            daysCounter++;
+        String[] date = {"", month, Integer.toString(year)}; //dd/month//year format
+
+        GridPane monthView = new GridPane();
+        monthView.setAlignment(Pos.CENTER);
+        monthView.setPadding(new Insets(25, 10, 45, 10));
+        monthView.getStyleClass().add("days-button");
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {                 //Figure this out. 50 Buttons shouldnt be needed
+            buttons.add(new Button());
+            buttons.get(i).setPrefWidth(150);
+            buttons.get(i).setPrefHeight(80);
+
+            int finalI = i;
+            buttons.get(i).setOnAction(e -> {
+                date[0] = buttons.get(finalI).getText();
+                Events.display(date);
+            });
         }
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (daysCounter > daysInMonth[(int) monthNum]) {
-                    break;
-                }
-                gcDayView.setFill(fill);
-                gcDayView.fillRect(j*w + 30, height*(2+i) - 10, w, height);
-                gcDayView.setFill(date);
-                gcDayView.fillText(Integer.toString(daysCounter), j*w + 10 + 30, height*(2+i) + 15);
-                gcDayView.strokeRect(j*w + 30, height*(2+i) - 10, w, height);
+        //NEW END
+
+        //Draws the first row with differing starting days of the month
+        if (newFday == 6) {
+            for (int i = 0; i < 7; i++) {
+                buttons.get(i).setText(Integer.toString(daysCounter));
+                daysCounter++;
+            }
+        } else {
+            for (int i = 0; i < 7 - newFday - 1; i++) {
+                buttons.get(newFday + i + 1).setText(Integer.toString(daysCounter));
                 daysCounter++;
             }
         }
 
-        return dayView;
+
+        for (int i = 0; i < 7; i++) {
+            monthView.add(buttons.get(i), i, 0);
+        }
+
+        int xx = 6;
+        for (int i = 1; i < 6; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (daysCounter > daysInMonth[(int) monthNum]) {
+                    break;
+                }
+
+                buttons.get(xx+1).setText(Integer.toString(daysCounter));
+                monthView.add(buttons.get(xx+1), j, i+1);
+
+                xx++;
+                daysCounter++;
+            }
+        }
+
+        return monthView;
     }
 
     public int fdayConv(int fday) {
@@ -218,13 +254,13 @@ public class Main extends Application {
         int newFday = 0;
 
         switch (fday) {
-            case 0:    newFday = 5;  break;
-            case 1:    newFday = 6;  break;
-            case 2:    newFday = 0;  break;
-            case 3:    newFday = 1;  break;
-            case 4:    newFday = 2;  break;
-            case 5:    newFday = 3;  break;
-            case 6:    newFday = 4;  break;
+            case 0:  newFday = 5;  break;
+            case 1:  newFday = 6;  break;
+            case 2:  newFday = 0;  break;
+            case 3:  newFday = 1;  break;
+            case 4:  newFday = 2;  break;
+            case 5:  newFday = 3;  break;
+            case 6:  newFday = 4;  break;
             default: System.out.println("Incorrect input.");
         }
 
