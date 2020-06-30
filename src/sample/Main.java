@@ -204,10 +204,16 @@ public class Main extends Application {
         monthView.getStyleClass().add("days-button");
 
         ArrayList<Button> buttons = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {                       //Figure this out. 50 Buttons shouldnt be needed
+        for (int i = 0; i < 50; i++) {                 //Figure this out. 50 Buttons shouldnt be needed
             buttons.add(new Button());
             buttons.get(i).setPrefWidth(150);
             buttons.get(i).setPrefHeight(80);
+
+            int finalI = i;
+            buttons.get(i).setOnAction(e -> {
+                System.out.println(buttons.get(finalI).getText() + " " + month + " "
+                                    + year + " has been pressed.");
+            });
         }
 
         //NEW END
