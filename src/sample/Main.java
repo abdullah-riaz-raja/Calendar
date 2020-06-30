@@ -200,6 +200,7 @@ public class Main extends Application {
         //NEW ARTIFACTS
 
         GridPane monthView = new GridPane();
+        monthView.setAlignment(Pos.CENTER);
         monthView.setPadding(new Insets(25, 10, 45, 10));
         monthView.getStyleClass().add("days-button");
 
@@ -213,6 +214,7 @@ public class Main extends Application {
             buttons.get(i).setOnAction(e -> {
                 System.out.println(buttons.get(finalI).getText() + " " + month + " "
                                     + year + " has been pressed.");
+                Events.display();
             });
         }
 
