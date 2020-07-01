@@ -30,3 +30,16 @@
     -fx-background-radius: 8;
     //-fx-alignment: top-left; //add this to a custom css class and apply it to event box
 }
+
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color: #35383d
+}
+.table-view .column-header .label{
+   -fx-text-fill: #C2C5CC;
+   -fx-font-weight: bold;
+}
+.table-view .cell{
+   -fx-background-color: #40444b;
+   -fx-text-fill: #C2C5CC;
+}

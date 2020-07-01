@@ -34,17 +34,11 @@ public class Main extends Application {
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
     static Connection con;
-    static Statement st;
-    static ResultSet rs;
 
     @Override
     public void start(Stage primaryStage) throws SQLException {
 
-        String query = "Select * from Events";
-
         con = DBConnection.startConnection();
-        st = con.createStatement();
-        rs = st.executeQuery(query);
 
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
@@ -122,7 +116,6 @@ public class Main extends Application {
         Button exit = new Button("Exit");
         exit.setOnAction(e -> {
             try {
-                st.close();
                 con.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -130,7 +123,7 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next);
+        settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next, exit);
 
         Node daysHeader = drawDays(month, year);
 
@@ -230,7 +223,11 @@ public class Main extends Application {
             int finalI = i;
             buttons.get(i).setOnAction(e -> {
                 date[0] = buttons.get(finalI).getText();
-                Events.display(date);
+                try {
+                    Events.display(date);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             });
         }
 
