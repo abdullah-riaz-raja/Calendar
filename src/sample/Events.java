@@ -17,8 +17,6 @@ import java.sql.SQLException;
 
 public class Events {
 
-    //static TableView<EventTable> table = new TableView<>();
-
     static Stage mainWindow = new Stage();
 
     public static void display(String[] date) throws SQLException {
@@ -27,88 +25,10 @@ public class Events {
 
         System.out.println(dateString + " has been pressed.");
 
-        TableView<EventTable> table = readFrom(dateString);
-
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(20, 20, 20, 20));
-        vBox.setSpacing(15);
-        vBox.setAlignment(Pos.CENTER);
-
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(20, 20, 20, 20));
-        hBox.setSpacing(15);
-        hBox.setAlignment(Pos.CENTER);
-
-        Button addEvent = new Button("Add Event");
-        addEvent.setOnAction(e -> {
-            displayAddEventWindow(dateString);
-        });
-
-        Button refresh = new Button("Refresh");         //Fix Refresh. Table doesnt update when new
-        refresh.setOnAction(e -> {                        //events are creted
-        });
-
-        hBox.getChildren().addAll(addEvent, refresh);
-        vBox.getChildren().addAll(table, hBox);
-
-
-
-        mainWindow.setTitle("Events");
-        mainWindow.setScene(new Scene(vBox, 550, 320));
-        mainWindow.getScene().getStylesheets().add("customCSS.css");
-        mainWindow.showAndWait();
-        mainWindow.centerOnScreen();
+        readFrom(dateString);
     }
 
-    public static void displayAddEventWindow(String date) {
-
-        Stage window = new Stage();
-
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(20, 20, 20, 20));
-        vBox.setSpacing(10);
-
-        Label prompt = new Label("Enter your event details here:");
-
-        TextField title = new TextField();
-        title.setMinWidth(500);
-
-        TextField detail = new TextField();
-        detail.setMinHeight(100);
-        detail.setMinWidth(500);
-
-        Button enter = new Button("Enter");
-        enter.setOnAction(e -> {
-            if (!title.getText().equals("")) {
-                System.out.println("Event Created.");
-                try {
-                    writeTo(date, title.getText(), detail.getText());
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        vBox.getChildren().addAll(prompt, title, detail, enter);
-        window.setTitle("Add Event");
-        window.setScene(new Scene(vBox, 550, 300));
-        window.getScene().getStylesheets().add("customCSS.css");
-        window.show();
-    }
-
-    public static void writeTo(String date, String title, String detail) throws SQLException {
-
-        String query = "INSERT INTO Events (Date, Title, Detail) VALUES (?, ?, ?);";
-
-        PreparedStatement preStmt = Main.con.prepareStatement(query);
-        preStmt.setString(1, date);
-        preStmt.setString(2, title);
-        preStmt.setString(3, detail);
-
-        preStmt.executeUpdate();
-    }
-
-    public static TableView readFrom(String date) throws SQLException {
+    public static void readFrom(String date) throws SQLException {
 
         TableView<EventTable> table = new TableView<>();;
 
@@ -138,7 +58,101 @@ public class Events {
         table.setItems(eventList);
         table.getColumns().addAll(dateColumn, titleColumn, detailColumn);
 
-        return table;
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20, 20, 20, 20));
+        vBox.setSpacing(15);
+        vBox.setAlignment(Pos.CENTER);
+
+        HBox options = new HBox();
+        options.setPadding(new Insets(20, 20, 20, 20));
+        options.setSpacing(15);
+        options.setAlignment(Pos.CENTER);
+
+        Button addEvent = new Button("Add Event");
+        addEvent.setOnAction(e -> {
+            mainWindow.close();
+            displayAddEventWindow(date);
+        });
+
+        Button clearAll = new Button("Clear All");  //FIX THIS
+//        clearAll.setOnAction(e -> {
+//            mainWindow.close();
+//            try {
+//                clearEvents(date);
+//                readFrom(date);
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+
+        options.getChildren().addAll(addEvent, clearAll);
+        vBox.getChildren().addAll(table, options);
+
+        mainWindow.setTitle("Events");
+        mainWindow.setScene(new Scene(vBox, 550, 320));
+        mainWindow.getScene().getStylesheets().add("customCSS.css");
+        mainWindow.showAndWait();
     }
+
+    public static void displayAddEventWindow(String date) {
+
+        Stage window = new Stage();
+
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20, 20, 20, 20));
+        vBox.setSpacing(10);
+
+        Label prompt = new Label("Enter your event details here:");
+
+        TextField title = new TextField();
+        title.setMinWidth(500);
+
+        TextField detail = new TextField();
+        detail.setMinHeight(100);
+        detail.setMinWidth(500);
+
+        Button enter = new Button("Enter");
+        enter.setOnAction(e -> {
+            if (!title.getText().equals("")) {
+                System.out.println("Event Created.");
+                try {
+                    writeTo(date, title.getText(), detail.getText());
+                    mainWindow.close();
+                    readFrom(date);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        vBox.getChildren().addAll(prompt, title, detail, enter);
+        mainWindow.setTitle("Add Event");
+        mainWindow.setScene(new Scene(vBox, 550, 300));
+        mainWindow.getScene().getStylesheets().add("customCSS.css");
+        mainWindow.show();
+    }
+
+    public static void writeTo(String date, String title, String detail) throws SQLException {
+
+        String query = "INSERT INTO Events (Date, Title, Detail) VALUES (?, ?, ?);";
+
+        PreparedStatement preStmt = Main.con.prepareStatement(query);
+        preStmt.setString(1, date);
+        preStmt.setString(2, title);
+        preStmt.setString(3, detail);
+
+        preStmt.executeUpdate();
+    }
+
+    public static void clearEvents(String date) throws SQLException {
+
+        String update = "DELETE FROM Events WHERE date = ?";
+
+        PreparedStatement preStmt = Main.con.prepareStatement(update);
+        preStmt.setString(1, date);
+
+        preStmt.executeUpdate();
+    }
+
 
 }
