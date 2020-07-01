@@ -33,14 +33,18 @@ public class Main extends Application {
     ArrayList<String> months = new ArrayList<>(Arrays.asList("January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
+    static Connection con;
+    static Statement st;
+    static ResultSet rs;
+
     @Override
     public void start(Stage primaryStage) throws SQLException {
 
         String query = "Select * from Events";
 
-        Connection con = DBConnection.startConnection();
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery(query);
+        con = DBConnection.startConnection();
+        st = con.createStatement();
+        rs = st.executeQuery(query);
 
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
@@ -67,9 +71,6 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(dateEntry, 300, 150));
         primaryStage.getScene().getStylesheets().add("customCSS.css");
         primaryStage.show();
-
-        st.close();
-        con.close();
     }
 
     public void display(Stage stage, String month, int year) {
@@ -116,6 +117,17 @@ public class Main extends Application {
             if (!match) {
                 display(stage, months.get(11), year - 1);
             }
+        });
+
+        Button exit = new Button("Exit");
+        exit.setOnAction(e -> {
+            try {
+                st.close();
+                con.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            System.exit(0);
         });
 
         settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next);

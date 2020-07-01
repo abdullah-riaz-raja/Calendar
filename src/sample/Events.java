@@ -8,15 +8,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Events {
 
     public static void display(String[] date) {
 
-        System.out.println(date[0] + " " + date[1] + " "
-                + date[2] + " has been pressed.");
+        String dateString = date[0] + "-" + date[1] + "-" + date[2];
+
+        System.out.println(dateString + " has been pressed.");
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
@@ -24,26 +25,51 @@ public class Events {
 
         Label prompt = new Label("Enter your event details here:");
 
-        TextField eventField = new TextField();
-        eventField.setMinHeight(100);
-        eventField.setMinWidth(500);
+        TextField title = new TextField();
+        title.setMinWidth(500);
+
+        TextField detail = new TextField();
+        detail.setMinHeight(100);
+        detail.setMinWidth(500);
 
         Button enter = new Button("Enter");
         enter.setOnAction(e -> {
-            if (!eventField.getText().equals("")) {
-                System.out.println("Event Created: " + eventField.getText());
+            if (!title.getText().equals("")) {
+                System.out.println("Event Created.");
+                try {
+                    writeTo(dateString, title.getText(), detail.getText());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
-        vBox.getChildren().addAll(prompt, eventField, enter);
+        vBox.getChildren().addAll(prompt, title, detail, enter);
 
         Stage window = new Stage();
 
         window.setTitle("Events");
-        window.setScene(new Scene(vBox, 550, 200));
+        window.setScene(new Scene(vBox, 550, 300));
         window.getScene().getStylesheets().add("customCSS.css");
         window.showAndWait();
 
     }
+
+    public static void writeTo(String date, String title, String detail) throws SQLException {
+
+        String query = "INSERT INTO Events (Date, Title, Detail) VALUES (?, ?, ?);";
+
+        PreparedStatement preStmt = Main.con.prepareStatement(query);
+        preStmt.setString(1, date);
+        preStmt.setString(2, title);
+        preStmt.setString(3, detail);
+
+        preStmt.executeUpdate();
+    }
+
+//    public static void readFrom(String date) throws SQLException {
+//
+//
+//    }
 
 }
