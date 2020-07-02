@@ -17,20 +17,20 @@ import java.sql.SQLException;
 
 public class Events {
 
-    static Stage mainWindow = new Stage();
+    private static Stage mainWindow = new Stage();
+    static String date = "";
 
-    public static void display(String[] date) throws SQLException {
+    public static void display(String[] dateArray) throws SQLException {
 
-        String dateString = date[0] + "-" + date[1] + "-" + date[2];
+        date = dateArray[0] + "-" + dateArray[1] + "-" + dateArray[2];
 
-        System.out.println(dateString + " has been pressed.");
+        System.out.println(date + " has been pressed.");
 
-        readFrom(dateString);
+        readFrom();
     }
 
-    public static void readFrom(String date) throws SQLException {
-
-        TableView<EventTable> table = new TableView<>();;
+    public static TableView<EventTable> createTable() throws SQLException {
+        TableView<EventTable> table = new TableView<>();
 
         TableColumn dateColumn = new TableColumn("Date");
         TableColumn titleColumn = new TableColumn("Title");
@@ -44,8 +44,6 @@ public class Events {
 
         String query = "SELECT * from Events WHERE date = ?";
 
-        System.out.println("idk why this dont work");
-
         PreparedStatement prepStmt = Main.con.prepareStatement(query);
         prepStmt.setString(1, date);
         ResultSet rs = prepStmt.executeQuery();
@@ -57,6 +55,13 @@ public class Events {
 
         table.setItems(eventList);
         table.getColumns().addAll(dateColumn, titleColumn, detailColumn);
+
+        return table;
+    }
+
+    public static void readFrom() throws SQLException {
+
+        TableView<EventTable> table = createTable();
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
@@ -71,19 +76,19 @@ public class Events {
         Button addEvent = new Button("Add Event");
         addEvent.setOnAction(e -> {
             mainWindow.close();
-            displayAddEventWindow(date);
+            displayAddEventWindow();
         });
 
-        Button clearAll = new Button("Clear All");  //FIX THIS
-//        clearAll.setOnAction(e -> {
-//            mainWindow.close();
-//            try {
-//                clearEvents(date);
-//                readFrom(date);
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
+        Button clearAll = new Button("Clear All");
+        clearAll.setOnAction(e -> {
+            try {
+                clearAllEvents();
+                mainWindow.close();
+                readFrom();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         options.getChildren().addAll(addEvent, clearAll);
         vBox.getChildren().addAll(table, options);
@@ -94,9 +99,7 @@ public class Events {
         mainWindow.showAndWait();
     }
 
-    public static void displayAddEventWindow(String date) {
-
-        Stage window = new Stage();
+    public static void displayAddEventWindow() {
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
@@ -116,9 +119,9 @@ public class Events {
             if (!title.getText().equals("")) {
                 System.out.println("Event Created.");
                 try {
-                    writeTo(date, title.getText(), detail.getText());
+                    writeTo(title.getText(), detail.getText());
                     mainWindow.close();
-                    readFrom(date);
+                    readFrom();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -132,7 +135,7 @@ public class Events {
         mainWindow.show();
     }
 
-    public static void writeTo(String date, String title, String detail) throws SQLException {
+    public static void writeTo(String title, String detail) throws SQLException {
 
         String query = "INSERT INTO Events (Date, Title, Detail) VALUES (?, ?, ?);";
 
@@ -144,7 +147,7 @@ public class Events {
         preStmt.executeUpdate();
     }
 
-    public static void clearEvents(String date) throws SQLException {
+    public static void clearAllEvents() throws SQLException {
 
         String update = "DELETE FROM Events WHERE date = ?";
 

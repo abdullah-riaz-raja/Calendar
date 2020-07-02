@@ -18,9 +18,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
