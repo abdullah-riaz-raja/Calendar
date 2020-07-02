@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -41,12 +42,17 @@ public class Main extends Application {
         GridPane dateEntry = new GridPane();
         dateEntry.setHgap(5);
         dateEntry.setVgap(10);
-        dateEntry.setPadding(new Insets(25, 20, 45, 45));
+        dateEntry.setPadding(new Insets(25, 20, 30, 45));
 
         Label monthEntry = new Label("Month: ");
-        TextField monthField = new TextField();
+        ComboBox<String> monthComboBox = new ComboBox<>();
+        for (String month : months) {
+            monthComboBox.getItems().add(month);
+        }
         dateEntry.add(monthEntry, 0, 0);
-        dateEntry.add(monthField, 1, 0);
+        dateEntry.add(monthComboBox, 1, 0);
+
+
 
         Label yearEntry = new Label("Year: ");
         TextField yearField = new TextField();
@@ -55,7 +61,7 @@ public class Main extends Application {
 
         Button enter = new Button("Enter");
         enter.setOnAction(e ->
-                display(primaryStage,monthField.getText(), Integer.parseInt(yearField.getText()))
+                display(primaryStage,monthComboBox.getValue(), Integer.parseInt(yearField.getText()))
         );
         dateEntry.add(enter, 1, 2);
 
@@ -70,7 +76,7 @@ public class Main extends Application {
 
         //Navigation and Current Name/Year
         HBox settings = new HBox();
-        settings.setPadding(new Insets(20, 45, 20, 45));
+        settings.setPadding(new Insets(20, 45, 15, 45));
         settings.setSpacing(20);
 
         TextField currentMonth = new TextField(month);
@@ -121,6 +127,9 @@ public class Main extends Application {
             System.exit(0);
         });
 
+        Label currentDate = new Label("    " + month + " " + Integer.toString(year));
+        currentDate.getStyleClass().add("currentDate");
+
         settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next, exit);
 
         Node daysHeader = drawDays(month, year);
@@ -128,7 +137,7 @@ public class Main extends Application {
         Node monthView = drawMonth(month, year);
 
         stage.setTitle("Calendar");
-        base.getChildren().addAll(settings, daysHeader, monthView);
+        base.getChildren().addAll(settings, currentDate, daysHeader, monthView);
         stage.setScene(new Scene(base, 1100, 750));
         stage.getScene().getStylesheets().add("customCSS.css");
         stage.show();
@@ -176,7 +185,7 @@ public class Main extends Application {
         int yearCalc = (int) values[1];
         int fday = (int) values[2];                         //first day
 
-        Canvas dayView = new Canvas(1100, 80);
+        Canvas dayView = new Canvas(1100, 90);
         GraphicsContext gcDayView = dayView.getGraphicsContext2D();
         gcDayView.setStroke(Color.BLACK);
         gcDayView.setFill(Color.WHITE);
@@ -184,11 +193,15 @@ public class Main extends Application {
 
         gcDayView.setFont(new Font("Arial", 20));
         for (int i = 0; i < 7; i++) {
-            gcDayView.fillText(days.get(i), i*150+20+30, 20+10);
+            gcDayView.fillText(days.get(i), i*150+20+30, 20+10+10);
         }
         gcDayView.strokeLine(0, 30+20, 1100, 30+20);
 
-        return dayView;
+        HBox dayViewCentered = new HBox();
+        dayViewCentered.setAlignment(Pos.CENTER);
+        dayViewCentered.getChildren().add(dayView);
+
+        return dayViewCentered;
     }
 
     public Node drawMonth(String month, int year) {

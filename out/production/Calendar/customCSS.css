@@ -4,6 +4,13 @@
 
 .label {
     -fx-text-fill: #C2C5CC;
+    -fx-font-weight: bold;
+}
+
+.currentDate {
+    -fx-text-fill: #C2C5CC;
+    -fx-font-size: 45px;
+    -fx-font-weight: bold;
 }
 
 .button {
@@ -31,8 +38,8 @@
     //-fx-alignment: top-left; //add this to a custom css class and apply it to event box
 }
 
-.table-view .column-header,
-.table-view .column-header-background .filler {
+//Table
+.table-view .column-header, .table-view .column-header-background .filler {
     -fx-background-color: #35383d
 }
 .table-view .column-header .label{
@@ -42,4 +49,32 @@
 .table-view .cell{
    -fx-background-color: #40444b;
    -fx-text-fill: #C2C5CC;
+   
+}
+
+.table-view{
+   -fx-background-color: #40444b;
+   -fx-font-weight: bold;
+}
+
+//Combo Box
+.combo-box {
+    -fx-background-color: #262626;
+    -fx-pref-width: 160px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C2C5CC;
+    -fx-background-radius: 8;
+}
+
+.combo-box .list-cell:filled {
+    -fx-background-color: #262626;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C2C5CC;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 4 0 4 5;
+    -fx-text-fill: #C2C5CC;
+    -fx-background-color: #262626;
+    -fx-font-weight: bold;
 }
