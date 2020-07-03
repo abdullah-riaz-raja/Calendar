@@ -27,8 +27,8 @@ public class Main extends Application {
 
     //Global Variables
     int[] daysInMonth = {0,0,0,31,30,31,30,31,31,30,31,30,31,31,28};
-    ArrayList<String> days = new ArrayList<>(Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday",
-            "Friday", "Saturday", "Sunday"));
+    ArrayList<String> days = new ArrayList<>(Arrays.asList("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+            "Friday", "Saturday"));
     ArrayList<String> months = new ArrayList<>(Arrays.asList("January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
