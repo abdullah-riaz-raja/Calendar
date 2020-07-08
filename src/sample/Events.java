@@ -54,24 +54,29 @@ public class Events {
         }
 
         table.setItems(eventList);
-        table.getColumns().addAll(dateColumn, titleColumn, detailColumn);
+        table.getColumns().addAll(titleColumn, detailColumn);
 
         return table;
     }
 
     public static void readFrom() throws SQLException {
 
-        TableView<EventTable> table = createTable();
-
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
         vBox.setSpacing(15);
-        vBox.setAlignment(Pos.CENTER);
 
         HBox options = new HBox();
         options.setPadding(new Insets(20, 20, 20, 20));
         options.setSpacing(15);
         options.setAlignment(Pos.CENTER);
+
+        TableView<EventTable> table = createTable();
+        table.setMinHeight(400);
+        table.setMinWidth(500);
+
+        HBox tableHBox = new HBox();
+        tableHBox.setAlignment(Pos.CENTER);
+        tableHBox.getChildren().add(table);
 
         Button addEvent = new Button("Add Event");
         addEvent.setOnAction(e -> {
@@ -90,11 +95,14 @@ public class Events {
             }
         });
 
+        Label currentDate = new Label(date);
+        currentDate.getStyleClass().add("currentDate");
+
         options.getChildren().addAll(addEvent, clearAll);
-        vBox.getChildren().addAll(table, options);
+        vBox.getChildren().addAll(currentDate, tableHBox, options);
 
         mainWindow.setTitle("Events");
-        mainWindow.setScene(new Scene(vBox, 550, 320));
+        mainWindow.setScene(new Scene(vBox, 550, 600));
         mainWindow.getScene().getStylesheets().add("customCSS.css");
         mainWindow.showAndWait();
     }
@@ -105,16 +113,21 @@ public class Events {
         vBox.setPadding(new Insets(20, 20, 20, 20));
         vBox.setSpacing(10);
 
-        Label prompt = new Label("Enter your event details here:");
+        Label addEvent = new Label("Add Event");
+        addEvent.getStyleClass().add("currentDate");
 
         TextField title = new TextField();
+        title.setPromptText("Enter title here");
         title.setMinWidth(500);
 
         TextField detail = new TextField();
+        detail.setPromptText("Enter details here");
         detail.setMinHeight(100);
         detail.setMinWidth(500);
+        detail.setStyle("-fx-alignment: top-left");
 
         Button enter = new Button("Enter");
+        //enter.setStyle("-fx-background-color: #00AB66"); eh, dk if I should have colored buttons all over
         enter.setOnAction(e -> {
             if (!title.getText().equals("")) {
                 System.out.println("Event Created.");
@@ -128,7 +141,7 @@ public class Events {
             }
         });
 
-        vBox.getChildren().addAll(prompt, title, detail, enter);
+        vBox.getChildren().addAll(addEvent, title, detail, enter);
         mainWindow.setTitle("Add Event");
         mainWindow.setScene(new Scene(vBox, 550, 300));
         mainWindow.getScene().getStylesheets().add("customCSS.css");

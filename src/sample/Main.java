@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,6 +35,8 @@ public class Main extends Application {
             "May", "June", "July", "August", "September", "October", "November", "December"));
 
     static Connection con;
+
+    static int[] todayDate = getTodayDate();
 
     @Override
     public void start(Stage primaryStage) throws SQLException {
@@ -52,8 +56,6 @@ public class Main extends Application {
         dateEntry.add(monthEntry, 0, 0);
         dateEntry.add(monthComboBox, 1, 0);
 
-
-
         Label yearEntry = new Label("Year: ");
         TextField yearField = new TextField();
         dateEntry.add(yearEntry, 0, 1);
@@ -63,7 +65,13 @@ public class Main extends Application {
         enter.setOnAction(e ->
                 display(primaryStage,monthComboBox.getValue(), Integer.parseInt(yearField.getText()))
         );
-        dateEntry.add(enter, 1, 2);
+        dateEntry.add(enter, 0, 2);
+
+        Button today = new Button("Today");
+        today.setOnAction(e -> {
+            display(primaryStage, months.get(todayDate[1]-1), todayDate[0]);
+        });
+        dateEntry.add(today, 1, 2);
 
         primaryStage.setTitle("Enter Month and Year");
         primaryStage.setScene(new Scene(dateEntry, 300, 150));
@@ -117,7 +125,13 @@ public class Main extends Application {
             }
         });
 
+        Button today = new Button("Today");
+        today.setOnAction(e -> {
+            display(stage, months.get(todayDate[1]-1), todayDate[0]);
+        });
+
         Button exit = new Button("Exit");
+        exit.setStyle("-fx-background-color: #CF1E25");
         exit.setOnAction(e -> {
             try {
                 con.close();
@@ -127,10 +141,10 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        Label currentDate = new Label("    " + month + " " + Integer.toString(year));
+        Label currentDate = new Label("    " + month + " " + year);
         currentDate.getStyleClass().add("currentDate");
 
-        settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next, exit);
+        settings.getChildren().addAll(currentMonth, currentYear, goTo, prev, next, today, exit);
 
         Node daysHeader = drawDays(month, year);
 
@@ -141,6 +155,23 @@ public class Main extends Application {
         stage.setScene(new Scene(base, 1100, 750));
         stage.getScene().getStylesheets().add("customCSS.css");
         stage.show();
+    }
+
+    public static int[] getTodayDate() {
+
+        int[] returnVals = {0, 0, 0};
+
+        LocalDate date = LocalDate.now(); // yyyy/mm/dd
+
+        returnVals[0] = date.getYear();
+        returnVals[1] = date.getMonthValue();
+        returnVals[2] = Integer.parseInt(date.toString().substring(9, 10));
+        System.out.println(date);
+        System.out.println(returnVals[0]);
+        System.out.println(returnVals[1]);
+        System.out.println(returnVals[2]);
+
+        return returnVals;
     }
 
     public double[] initializeMonth(String month, int year) {
