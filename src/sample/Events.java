@@ -17,16 +17,29 @@ import java.sql.SQLException;
 
 public class Events {
 
-    private static Stage mainWindow = new Stage();
     static String date = "";
 
-    public static void display(String[] dateArray) throws SQLException {
+    public static void start(String[] dateArray) throws SQLException {
+
+        Stage primaryStage = new Stage();
 
         date = dateArray[0] + "-" + dateArray[1] + "-" + dateArray[2];
 
         System.out.println(date + " has been pressed.");
 
-        readFrom();
+        displayEvents(primaryStage);
+    }
+
+    public static void onClick(TableView<EventTable> table) throws SQLException {
+        if (table.getSelectionModel().getSelectedItem() != null) {
+            EventTable selected = table.getSelectionModel().getSelectedItem();
+            System.out.println(selected.getTitle());
+
+            String title = selected.getTitle();
+            String date = selected.getDate();
+
+            clear(date, title);
+        }
     }
 
     public static TableView<EventTable> createTable() throws SQLException {
@@ -59,7 +72,7 @@ public class Events {
         return table;
     }
 
-    public static void readFrom() throws SQLException {
+    public static void displayEvents(Stage stage) throws SQLException {
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
@@ -79,17 +92,23 @@ public class Events {
         tableHBox.getChildren().add(table);
 
         Button addEvent = new Button("Add Event");
-        addEvent.setOnAction(e -> {
-            mainWindow.close();
-            displayAddEventWindow();
-        });
+        addEvent.setOnAction(e -> displayAddEventWindow(stage));
 
         Button clearAll = new Button("Clear All");
         clearAll.setOnAction(e -> {
             try {
                 clearAllEvents();
-                mainWindow.close();
-                readFrom();
+                displayEvents(stage);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Button clear = new Button("Clear");
+        clear.setOnAction(e -> {
+            try {
+                onClick(table);
+                displayEvents(stage);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -98,16 +117,16 @@ public class Events {
         Label currentDate = new Label(date);
         currentDate.getStyleClass().add("currentDate");
 
-        options.getChildren().addAll(addEvent, clearAll);
+        options.getChildren().addAll(addEvent, clearAll, clear);
         vBox.getChildren().addAll(currentDate, tableHBox, options);
 
-        mainWindow.setTitle("Events");
-        mainWindow.setScene(new Scene(vBox, 550, 600));
-        mainWindow.getScene().getStylesheets().add("customCSS.css");
-        mainWindow.showAndWait();
+        stage.setTitle("Events");
+        stage.setScene(new Scene(vBox, 550, 600));
+        stage.getScene().getStylesheets().add("customCSS.css");
+        stage.show();
     }
 
-    public static void displayAddEventWindow() {
+    public static void displayAddEventWindow(Stage stage) {
 
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20, 20, 20, 20));
@@ -127,14 +146,13 @@ public class Events {
         detail.setStyle("-fx-alignment: top-left");
 
         Button enter = new Button("Enter");
-        //enter.setStyle("-fx-background-color: #00AB66"); eh, dk if I should have colored buttons all over
+        //enter.setStyle("-fx-background-color: #00AB66"); eh, dk if I should have dif colored buttons all over
         enter.setOnAction(e -> {
             if (!title.getText().equals("")) {
                 System.out.println("Event Created.");
                 try {
                     writeTo(title.getText(), detail.getText());
-                    mainWindow.close();
-                    readFrom();
+                    displayEvents(stage);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -142,10 +160,10 @@ public class Events {
         });
 
         vBox.getChildren().addAll(addEvent, title, detail, enter);
-        mainWindow.setTitle("Add Event");
-        mainWindow.setScene(new Scene(vBox, 550, 300));
-        mainWindow.getScene().getStylesheets().add("customCSS.css");
-        mainWindow.show();
+        stage.setTitle("Add Event");
+        stage.setScene(new Scene(vBox, 550, 300));
+        stage.getScene().getStylesheets().add("customCSS.css");
+        stage.show();
     }
 
     public static void writeTo(String title, String detail) throws SQLException {
@@ -156,6 +174,17 @@ public class Events {
         preStmt.setString(1, date);
         preStmt.setString(2, title);
         preStmt.setString(3, detail);
+
+        preStmt.executeUpdate();
+    }
+
+    public static void clear(String date, String title) throws SQLException {
+
+        String update = "DELETE FROM Events WHERE date = ? AND title = ?";
+
+        PreparedStatement preStmt = Main.con.prepareStatement(update);
+        preStmt.setString(1, date);
+        preStmt.setString(2, title);
 
         preStmt.executeUpdate();
     }
